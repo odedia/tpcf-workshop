@@ -57,7 +57,7 @@ Key points:
 ### 0.1 - Generate a Spring Boot Template from https://start.spring.io
 Stick to the default settings, however update:
 - artifact name to cloud-lab
-- for dependencies add *Web*
+- for dependencies add *Web* and *Actuator*
 - select Gradle or Maven Project
 
 <img src="img/init-screen.png">
@@ -436,16 +436,6 @@ You can also view what happened in the logging window from the previous step.
 
 For additional information, you can also drill down into the *TPCF Metrics" option in the Application page in TPCF. This includes more in-depth logging, and crash analysis.
 
-### 4.4 - BONUS - Create a TPCF manifest to simplify deployments
-
-https://docs.cloudfoundry.org/devguide/deploy-apps/manifest.html
-
-```sh
-cf create-app-manifest cloud-lab
-```
-
-You can customize deployment settings, as well as default binary path.
-
 ### 4.5 - BONUS - Add Auto-Scaling to Your Application
 
 https://docs.run.pivotal.io/appsman-services/autoscaler/using-autoscaler.html
@@ -489,14 +479,6 @@ cf unmap-route cloud-lab ENTER_TPCF_DOMAIN --hostname cloud-lab
 ```
 
 Note, all cloud-lab subdomain traffic will now be mapped to our recent deploy.
-
-**Replace ENTER_TPCF_DOMAIN with domain from *cf routes* step.**
-
-Cloud Foundry community members have written plugins to further automate the blue-green deployment process. These include:
-
-Autopilot: Autopilot is a Cloud Foundry Go plugin that provides a subcommand, zero-downtime-push, for hands-off, zero-downtime application deploys.
-BlueGreenDeploy: cf-blue-green-deploy is a plugin, written in Go, for the Cloud Foundry Command Line Interface (cf CLI) that automates a few steps involved in zero-downtime deploys.
-
 
 ## 5 - Configuration with Spring Boot
 
