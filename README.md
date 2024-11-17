@@ -16,7 +16,7 @@ Cloud Native Lab - Simple Workshop demonstrating Cloud-Native development with S
 * Scheduling
 * Messages (AMQB)
 
-## PCF
+## TPCF
 
 * Deployment
 * Scaling / Auto-Scaling
@@ -29,7 +29,7 @@ Cloud Native Lab - Simple Workshop demonstrating Cloud-Native development with S
 * RabbitMQ
 
 
-## PCF
+## TPCF
 
 ## Prerequisites
 
@@ -149,7 +149,6 @@ curl localhost:8080/hello
 This can be done by creating a *HelloWorldControllerTests* Java class file in the test/java directory with:
 
 ```java
-@RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class HelloWorldControllerTests {
 
@@ -176,13 +175,13 @@ From the commandline you can run them with:
 Note: RestTemplate and TestRestTemplate are the conventional ways for invoking / and testing HTTP/Rest calls.
 
 
-## 2 - WebApplication on PCF
+## 2 - WebApplication on TPCF
 
 Key points:
-* Deploying to PCF
-* Scaling in PCF
+* Deploying to TPCF
+* Scaling in TPCF
 
-### 2.1 - Login into the PCF instance that you are using (if required)
+### 2.1 - Login into the TPCF instance that you are using (if required)
 
 ```sh
 cf login -a ENTER_API_URL_HERE
@@ -190,22 +189,28 @@ cf login -a ENTER_API_URL_HERE
 
 Enter your Username and Password.
 
-### 2.2 - Deploy your application to PCF
+### 2.2 - Deploy your application to TPCF
+Since it's 2025, we're going to use Java 21, so we'll need to provide a variable indicating the JDK we're going to use:
 
-For Gradle:
-```sh
-cf push cloud-lab -p build/libs/cloud-lab-0.0.1-SNAPSHOT.jar
 ```
-For Maven:
-```sh
-cf push cloud-lab -p target/cloud-lab-0.0.1-SNAPSHOT.jar
+applications:
+  - name: cloud-lab
+    path: target/cloud-lab-0.0.1-SNAPSHOT.jar
+    env:
+      JBP_CONFIG_OPEN_JDK_JRE: '{ jre: { version: 21.+ } }'
 ```
 
-This will automatically create a new application in your default PCF development space, with the specific jar artifact deployed.
+All that's left is to push the app:
 
-Note that PCF will automatically detect that this is a Java application, and use the appropriate *BuildPack*.
+```
+cf push
+```
 
-### 2.3 - Login into the PCF portal to view your newly deployed / created application
+This will automatically create a new application in your default TPCF development space, with the specific jar artifact deployed.
+
+Note that TPCF will automatically detect that this is a Java application, and use the appropriate *BuildPack*.
+
+### 2.3 - Login into the TPCF portal to view your newly deployed / created application
 
 If you are using Pivotal Web Services, the portal is at:
 
@@ -382,7 +387,7 @@ For Maven users, the spring-boot-starter-parent POM includes a pre-configured pl
 </build>
 ```
 
-## 4 - Operations on PCF
+## 4 - Operations on TPCF
 
 Key points:
 * Dealing with Crashes
@@ -405,7 +410,7 @@ public class KillController {
 }
 ```
 
-Rebuild your app, and redeploy to PCF.
+Rebuild your app, and redeploy to TPCF.
 
 ```sh
  ./gradlew build && cf push cloud-lab -p build/libs/cloud-lab-0.0.1-SNAPSHOT.jar
@@ -415,7 +420,7 @@ Rebuild your app, and redeploy to PCF.
  ./mvnw package && cf push cloud-lab -p target/cloud-lab-0.0.1-SNAPSHOT.jar
 ```
 
-### 4.2 - In separate terminal window, TAIL the PCF app logs
+### 4.2 - In separate terminal window, TAIL the TPCF app logs
 
 ```sh
 cf logs cloud-lab
@@ -423,15 +428,15 @@ cf logs cloud-lab
 
 ### 4.3 - Call the /kill endpoint
 
-Note that PCF will automatically bring up a new instance.
+Note that TPCF will automatically bring up a new instance.
 
-This can be monitored from the PCF Dev Portal.
+This can be monitored from the TPCF Dev Portal.
 
 You can also view what happened in the logging window from the previous step.
 
-For additional information, you can also drill down into the *PCF Metrics" option in the Application page in PCF. This includes more in-depth logging, and crash analysis.
+For additional information, you can also drill down into the *TPCF Metrics" option in the Application page in TPCF. This includes more in-depth logging, and crash analysis.
 
-### 4.4 - BONUS - Create a PCF manifest to simplify deployments
+### 4.4 - BONUS - Create a TPCF manifest to simplify deployments
 
 https://docs.cloudfoundry.org/devguide/deploy-apps/manifest.html
 
@@ -472,20 +477,20 @@ Note the domain used for your cloud-lab apps.
 Route cloud-lab subdomain traffic to cloud-lab:
 
 ```sh
- cf map-route cloud-lab-2 ENTER_PCF_DOMAIN --hostname cloud-lab
+ cf map-route cloud-lab-2 ENTER_TPCF_DOMAIN --hostname cloud-lab
 ```
 
-**Replace ENTER_PCF_DOMAIN with domain from *cf routes* step.**
+**Replace ENTER_TPCF_DOMAIN with domain from *cf routes* step.**
 
 ##### 4.6.3 - Unmap cloud-lab traffic to the cloud-lab subdomain
 
 ```
-cf unmap-route cloud-lab ENTER_PCF_DOMAIN --hostname cloud-lab
+cf unmap-route cloud-lab ENTER_TPCF_DOMAIN --hostname cloud-lab
 ```
 
 Note, all cloud-lab subdomain traffic will now be mapped to our recent deploy.
 
-**Replace ENTER_PCF_DOMAIN with domain from *cf routes* step.**
+**Replace ENTER_TPCF_DOMAIN with domain from *cf routes* step.**
 
 Cloud Foundry community members have written plugins to further automate the blue-green deployment process. These include:
 
@@ -532,7 +537,7 @@ helloworld.message="Hello World - default config file"
 
 Default should be "Hello World - default config file"
 
-## 6 - Configuration on PCF
+## 6 - Configuration on TPCF
 
 Key points:
 * The cloud profile
@@ -540,7 +545,7 @@ Key points:
 
 ### 6.1 - Add a custom HelloWorld message for cloud deployments
 
-PCF deploys will automatically load *cloud* profile settings.
+TPCF deploys will automatically load *cloud* profile settings.
 
 In the resources folder, add a *application-cloud.properties* file.
 
@@ -550,7 +555,7 @@ Add:
 helloworld.message="Hello World - cloud only"
 ```
 
-Build and Redeploy to PCF.
+Build and Redeploy to TPCF.
 
 Verify the updated message at the /hello endpoint.
 
@@ -644,13 +649,13 @@ Given a String, evict it from the Cache.
 
 Hint: CacheEvict annotation
 
-## 8 - Caching on PCF
+## 8 - Caching on TPCF
 
 Key points:
 * Spring Boot Redis
 * CF MarketPlace / Service Broker
 * Binding Services to App Instances
-* Creating a Redis Instance in PCF
+* Creating a Redis Instance in TPCF
 
 
 ### 8.1 - Add the Spring Boot Redis and commons-pool dependencies to your build script.
@@ -666,9 +671,9 @@ dependencies {
 }
 ```
 
-Rebuild, and redeploy to PCF.
+Rebuild, and redeploy to TPCF.
 
-### 8.2 - Create a Redis Service Instance in PCF
+### 8.2 - Create a Redis Service Instance in TPCF
 
 You can view available self-self / on-demand provisioning services via the marketplace.
 
@@ -711,7 +716,7 @@ In application-cloud.properties add:
 spring.cache.type=REDIS
 ```
 
-Verify that Caching works locally and in PCF.
+Verify that Caching works locally and in TPCF.
 
 ## 9 - Data with Spring Boot
 
@@ -827,11 +832,11 @@ Full list of features are available at:
 
 https://projectlombok.org/features/all
 
-## 10 - Data on PCF
+## 10 - Data on TPCF
 
 Key points:
 * MySQL Connector
-* Creating a MySQL Instance in PCF
+* Creating a MySQL Instance in TPCF
 
 ### 10.1 - Add the MySQL dependency to the build script.
 
@@ -848,7 +853,7 @@ dependencies {
 }
 ```
 
-### 10.2 - Create a MySql Service Instance in PCF
+### 10.2 - Create a MySql Service Instance in TPCF
 
 You can view available self-self / on-demand provisioning services via the marketplace.
 
@@ -927,7 +932,7 @@ CREATE TABLE PERSON (
 INSERT INTO PERSON (first_name, last_name) VALUES ('Peter', 'Parker');
 ```
 
-### 11.3 - Rebuild and redeploy to PCF
+### 11.3 - Rebuild and redeploy to TPCF
 
 You can look at http://localhost:8080/actuator/flyway to review the list of scripts.
 
@@ -955,7 +960,7 @@ Add the following to it:
 ALTER TABLE person ADD middle_name varchar(255);
 ```
 
-Build and redeploy to PCF.
+Build and redeploy to TPCF.
 
 Flyway will automatically upgrade the Database Schema version to v2.
 
@@ -963,7 +968,7 @@ Flyway will automatically upgrade the Database Schema version to v2.
 
 Hint: Add a method definition with a Caching annotation to the PersonRepository interface.
 
-### 11.6 - BONUS - Deploy the PivotalMySQLWeb App into PCF to view the flyway_schema_history schema / and row values.
+### 11.6 - BONUS - Deploy the PivotalMySQLWeb App into TPCF to view the flyway_schema_history schema / and row values.
 
 App can be downloaded from:
 
@@ -1077,7 +1082,7 @@ public class QueueController {
 
 This will send messages to the default the "Default" exchange, with the "myQueue" routing key.
 
-*For purpose of workship, unlike Caching / Data , we will go directly to testing in PCF*
+*For purpose of workship, unlike Caching / Data , we will go directly to testing in TPCF*
 
 If do have a local instance of RabbitMQ, you can point to it by updating your application properties with the correct connection settings:
 
@@ -1091,12 +1096,12 @@ spring.rabbitmq.password = guest
 
 Your RabbitMQ instance will need to have a queue create called **myQueue**. Messages sent to the Default exchange with the **myQueue** routingkey will be automatically routed to the **myQueue** queue.
 
-## 14 - Messaging on PCF
+## 14 - Messaging on TPCF
 
 Key points:
-* Creating a RabbitMQ Instance in PCF
+* Creating a RabbitMQ Instance in TPCF
 
-### 14.1 - Create a RabbitMQ Service Instance in PCF
+### 14.1 - Create a RabbitMQ Service Instance in TPCF
 
 You can view available self-self / on-demand provisioning services via the marketplace.
 
@@ -1118,7 +1123,7 @@ cf bind-service cloud-lab custom-rabbitmq
 
 ### 14.3 - Add the *myQueue* queue to your RabbitMQ instance
 
-In the PCF Dev Portal:
+In the TPCF Dev Portal:
 
 In your DevSpace, select your RabbitMQ instance, and click Manage.
 
@@ -1134,7 +1139,7 @@ The Default Exchange will route to specific queues based on specified routing ke
 
 Confirm connection to your RabbitMQ Server using the health endpoint: /actuator/health
 
-Rebuild and deploy your app to PCF , with the changes from the previous step.
+Rebuild and deploy your app to TPCF , with the changes from the previous step.
 
 
 ### 14.4 - Test messaging using the /getmessage and /sendmessage endpoints.
