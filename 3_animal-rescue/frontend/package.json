@@ -1,0 +1,42 @@
+{
+  "name": "frontend",
+  "version": "1.0.0",
+  "dependencies": {
+    "axios": "^1.7.8",
+    "prop-types": "^15.8.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.3.1",
+    "react-responsive-carousel": "^3.2.23",
+    "react-scripts": "^5.0.1",
+    "semantic-ui-react": "^2.1.5",
+    "wait-on": "^8.0.1"
+  },
+  "scripts": {
+    "start": "wait-on tcp:8080 && REACT_APP_LOGIN_URI=http://localhost:8080/login REACT_APP_LOGOUT_URI=http://localhost:8080/logout react-scripts start",
+    "build": "REACT_APP_BACKEND_BASE_URI=/api react-scripts build",
+    "lint": "eslint src",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "proxy": "http://localhost:8080",
+  "homepage": "/rescue",
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "eslint": "^8.57.0"
+  }
+}

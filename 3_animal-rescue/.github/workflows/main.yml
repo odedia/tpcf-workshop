@@ -1,0 +1,124 @@
+name: Test All
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  backend-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Java JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: 17
+          distribution: temurin
+
+      - name: Run tests
+        run: ./scripts/local.sh backend
+
+  e2e-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.10.x
+
+      - name: Setup Java JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: 17
+          distribution: temurin
+
+      - name: Install dependencies
+        run: ./scripts/local.sh init
+
+      - name: Run tests
+        run: |
+          ./scripts/local.sh start --quiet
+          ./scripts/local.sh e2e --quiet
+          ./scripts/local.sh stop
+
+      - name: Upload reports
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: e2e-cypress-reports
+          path: e2e/cypress/*
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.10.x
+
+      - name: Setup Java JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: 17
+          distribution: temurin
+
+      - name: Install dependencies
+        run: ./scripts/local.sh init
+
+      - name: Run Frontend ESLint
+        run: |
+          cd frontend
+          npm run lint
+
+      - name: Run E2E ESLint
+        run: |
+          cd e2e
+          npm run lint
+
+  publish:
+    runs-on: ubuntu-latest
+    needs: [ backend-test, e2e-test, lint ]
+    if: |
+      github.ref == 'refs/heads/main' &&
+      needs.backend-test.result == 'success' &&
+      needs.e2e-test.result == 'success' &&
+      needs.lint.result == 'success'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.10.x
+
+      - name: Setup Java JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: 17
+          distribution: temurin
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build frontend image
+        run: |
+          ./gradlew :frontend:assemble
+          docker build frontend -t springcloudservices/animal-rescue-frontend:latest
+      - name: Push frontend image
+        run: docker push springcloudservices/animal-rescue-frontend:latest
+
+      - name: Build backend image
+        run: |
+          ./gradlew :backend:bootBuildImage --imageName springcloudservices/animal-rescue-backend:latest
+      - name: Push backend image
+        run: docker push springcloudservices/animal-rescue-backend:latest

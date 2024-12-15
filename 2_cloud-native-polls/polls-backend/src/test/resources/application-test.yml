@@ -1,0 +1,7 @@
+spring:
+  cloud:
+    discovery:
+      enabled: false
+    azure:
+      eventhub:
+        enabled: false

@@ -1,0 +1,20 @@
+{
+  "name": "acceptance",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "open": "cypress open",
+    "lint": "eslint cypress",
+    "test": "wait-on tcp:8080 && wait-on tcp:3000 && cypress run"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cypress": "^13.6.1",
+    "eslint": "^8.56.0",
+    "eslint-plugin-cypress": "^3.0.0",
+    "wait-on": "^8.0.0"
+  }
+}

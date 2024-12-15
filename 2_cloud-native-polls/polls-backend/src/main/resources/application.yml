@@ -1,0 +1,31 @@
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, prometheus, env
+
+spring:
+  application:
+    name: polls-backend
+  cloud:
+    services:
+      registrationMethod: direct
+    stream:
+      function:
+        definition: onVote
+      bindings:
+        onVote-in-0:
+          destination: cloudnativepoll.votes
+          # Use a group to ensure a single app instance handles incoming messages.
+          group: voter
+
+eureka:
+  instance:
+    nonSecurePort: 8080
+
+poll:
+  choices:
+    - Iron Man
+    - Captain America
+    - Thor
+    - Captain Marvel

@@ -1,0 +1,5 @@
+applications:
+  - name: cloud-lab
+    path: target/cloud-lab-0.0.1-SNAPSHOT.jar
+    env:
+      JBP_CONFIG_OPEN_JDK_JRE: '{ jre: { version: 17.+ } }'

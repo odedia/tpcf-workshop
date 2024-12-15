@@ -1,0 +1,11 @@
+applications:
+  - name: cloud-lab
+    random-route: true
+    buildpacks:
+    - java_buildpack_offline
+    path: target/cloud-lab-0.0.1-SNAPSHOT.jar
+    services:
+    - custom-rabbitmq
+    - custom-redis
+    env:
+      JBP_CONFIG_OPEN_JDK_JRE: '{ jre: { version: 17.+ } }'

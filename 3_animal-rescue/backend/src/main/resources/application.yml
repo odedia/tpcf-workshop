@@ -1,0 +1,30 @@
+---
+management:
+  endpoint:
+    health:
+      show-details: always
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+logging.level:
+  org.springframework.data: debug
+
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://any.uaa.uri/token_keys
+
+springdoc:
+  api-docs:
+    enabled: true
+    path: /api-docs
+  show-actuator: true
+
+---
+spring:
+  config.activate.on-profile: tap
+  security.oauth2.resourceserver.jwt.jwk-set-uri: '${spring.security.oauth2.client.provider.appsso.issuer-uri}/oauth2/jwks'

@@ -1,0 +1,23 @@
+helm install redis bitnami/redis --version 16.12.2 --set "master.disableCommands=['FLUSHDB']" --set "replica.replicaCount=0"
+
+kapp -y deploy --app rmq-operator --file https://github.com/rabbitmq/cluster-operator/releases/latest/download/cluster-operator.yml
+
+kubectl create namespace service-instances
+
+# Spring Cloud Discovery Feign Kubernetes needs to talk the Kubernetes API server, so the service account needs to have permissions:
+
+kubectl create clusterrolebinding default-tkg-sa-privileged-binding --clusterrole=cluster-admin --serviceaccount=demos:default
+
+k apply -f k8s/
+
+tanzu service claimable list --class rabbitmq
+
+tanzu service claim create rmq \
+  --resource-name rmq \
+  --resource-namespace service-instances \
+  --resource-kind RabbitmqCluster \
+  --resource-api-version rabbitmq.com/v1beta1
+
+tanzu services claims get rmq --namespace demos
+
+

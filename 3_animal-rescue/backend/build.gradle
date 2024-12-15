@@ -1,0 +1,71 @@
+plugins {
+	id 'org.springframework.boot' version '3.3.5'
+	id 'io.spring.dependency-management' version '1.1.6'
+	id 'java'
+	id 'jacoco'
+}
+
+group = 'io.spring.cloud.samples.animalrescue'
+version = '0.0.1-SNAPSHOT'
+
+// Java version configuration
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(17)
+	}
+}
+
+configurations {
+	developmentOnly
+	runtimeClasspath {
+		extendsFrom developmentOnly
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation 'org.springframework.boot:spring-boot-starter-data-r2dbc'
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
+	implementation "org.springframework.cloud:spring-cloud-bindings:2.0.4"
+
+	implementation "org.springframework.security:spring-security-web"
+
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation "org.springframework.security:spring-security-oauth2-resource-server"
+	implementation "org.springframework.security:spring-security-oauth2-jose"
+ 	implementation('io.pivotal.cfenv:java-cfenv-boot:3.3.0')
+	implementation 'org.springdoc:springdoc-openapi-starter-webflux-api:2.7.0'
+
+    runtimeOnly 'com.h2database:h2'
+	runtimeOnly 'io.r2dbc:r2dbc-h2'
+
+	testImplementation('org.springframework.security:spring-security-test')
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'io.projectreactor:reactor-test'
+ 	testImplementation('io.pivotal.cfenv:java-cfenv-test-support:3.3.0')
+}
+
+test {
+	useJUnitPlatform()
+	testLogging {
+		exceptionFormat = "full"
+		events = ["passed", "skipped", "failed"]
+	}
+}
+
+jacocoTestReport {
+	dependsOn test
+    reports {
+        xml.enabled true
+		xml.destination new File("${buildDir}/reports/jacoco/report.xml")
+		html.enabled false
+		csv.enabled false
+    }
+}

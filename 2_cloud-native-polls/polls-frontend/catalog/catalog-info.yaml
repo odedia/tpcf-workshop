@@ -1,0 +1,28 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: polls-frontend
+  description: Cloud Native Polls Web UI
+  tags:
+    - app-accelerator
+    - java
+    - spring
+    - web
+    - tanzu
+  annotations:
+    'backstage.io/kubernetes-label-selector': 'app.kubernetes.io/part-of=cloud-native-polls'
+spec:
+  type: service
+  lifecycle: experimental
+  owner: default-team
+  system: cloud-native-polls
+---
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: cloud-native-polls
+  description: Cloud Native Polls
+spec:
+  owner: default-team
+  domain: cloud-apps
+

@@ -1,0 +1,47 @@
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, prometheus, env, refresh
+
+spring:
+  application:
+    name: polls-frontend
+  cloud:
+    services:
+      registrationMethod: direct
+    stream:
+      function:
+        definition: voteQueueSource
+      bindings:
+        voteQueueSource-out-0:
+          destination: cloudnativepoll.votes
+feign:
+  discovery:
+    enabled: true
+  circuitbreaker:
+    enabled: true
+ribbon:
+  eureka:
+    enabled: true
+
+
+logging:
+  level:
+    fr:
+      alexandreroman:
+        cloudnativepoll: INFO
+
+poll:
+  refresh: 250
+  question: Who's the most powerful Avenger?
+  choices:
+    - Iron Man
+    - Captain America
+    - Thor
+    - Captain Marvel
+  images:
+    - ./images/ironman.jpg
+    - ./images/captainamerica.jpg
+    - ./images/thor.jpg
+    - ./images/marvel.jpg
