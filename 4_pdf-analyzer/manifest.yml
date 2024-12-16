@@ -6,7 +6,8 @@ applications:
   buildpacks:
     - java_buildpack_offline
   env:
-    JBP_CONFIG_OPEN_JDK_JRE: '{ jre: { version: 17.+}}'
+    JBP_CONFIG_OPEN_JDK_JRE: '{ jre: { version: 21.+}}'
+    VECTOR_DIMENSIONS: 768
   services:
     - postgres
     - embeddings
