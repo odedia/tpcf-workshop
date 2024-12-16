@@ -16,19 +16,20 @@ spring:
   ai:
     vectorstore:
       pgvector:
-      index-type: HNSW
-      distance-type: COSINE_DISTANCE
-      dimensions: {VECTOR_DIMENSIONS:768}
-      batching-strategy: TOKEN_COUNT
-      max-document-batch-size: 10000
+        initialize-schema: true
+        index-type: HNSW
+        distance-type: COSINE_DISTANCE
+        dimensions: {VECTOR_DIMENSIONS:768}
+        batching-strategy: TOKEN_COUNT
+        max-document-batch-size: 10000
+  sql:
+    init:
+      mode: always
 server:
   tomcat:
     max-post-size: 52428800
     max-http-header-size: 65536
     max-swallow-size: 100MB
-  sql:
-    init:
-      mode: always
 
 logging:
   level:
