@@ -110,8 +110,9 @@ in `gateway/gateway-demo.yaml`.
 For example, `http://animal-rescue.my.domain.io/rescue`.
 
 ## Deploy to Tanzu Application Service
+./gradlew build
 
-./gradlew :frontend:npm_ci
+(just frontend:) ./gradlew :frontend:npm_ci
 
 cf create-service p.gateway standard gateway-demo -c ./gateway/api-gateway-config.json
 review manifet.yml - no external routes!
