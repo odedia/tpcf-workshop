@@ -1,0 +1,33 @@
+name: Deploy 1_tpcf-ers-demo to Cloud Foundry
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Deploy to TAS
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Install CF CLI
+        run: |
+          curl -L "https://packages.cloudfoundry.org/stable?release=linux64-binary" -o cf-cli.tgz
+          tar -xzf cf-cli.tgz
+          sudo mv cf /usr/local/bin/cf
+          cf version
+
+      - name: Login to CF
+        run: |
+          cf api "${{ secrets.CF_API }}" --skip-ssl-validation
+          cf auth "${{ secrets.CF_USERNAME }}" "${{ secrets.CF_PASSWORD }}"
+          cf target -o "${{ secrets.CF_ORG }}" -s "${{ secrets.CF_SPACE }}"
+
+      - name: Push app from 1_tpcf-ers-demo directory
+        run: |
+          cd 1_tpcf-ers-demo
+          cf push
